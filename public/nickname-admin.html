@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BiomX Shop - Управление никнеймами Free Fire</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: #f5f5f5;
+      color: #333;
+      padding: 20px;
+    }
+    
+    header {
+      background-color: #f71a2c;
+      color: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    
+    h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    
+    button {
+      background-color: #f71a2c;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+    
+    button:hover {
+      background-color: #e01020;
+    }
+    
+    .button-secondary {
+      background-color: #666;
+    }
+    
+    .button-secondary:hover {
+      background-color: #555;
+    }
+    
+    .results {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 4px;
+      background-color: #f9f9f9;
+      border: 1px solid #eee;
+    }
+    
+    .nickname-entry {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .nickname-entry:last-child {
+      border-bottom: none;
+    }
+    
+    .nickname-entry .id {
+      flex: 0 0 120px;
+      font-weight: bold;
+    }
+    
+    .nickname-entry .name {
+      flex: 1;
+    }
+    
+    .nickname-entry .actions {
+      flex: 0 0 100px;
+      text-align: right;
+    }
+    
+    .alert {
+      padding: 10px 15px;
+      border-radius: 4px;
+      margin-bottom: 15px;
+    }
+    
+    .alert-success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    
+    .alert-error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+    }
+    
+    .tab.active {
+      border-bottom: 3px solid #f71a2c;
+      font-weight: bold;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    .known-nicknames {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 20px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    
+    .hint {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #666;
+    }
+    
+    .nickname-copy {
+      background-color: #f0f0f0;
+      padding: 5px;
+      border-radius: 3px;
+      font-family: monospace;
+      display: inline-block;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+    
+    @media (max-width: 600px) {
+      .container {
+        padding: 15px;
+      }
+      
+      .nickname-entry {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .nickname-entry .id,
+      .nickname-entry .name,
+      .nickname-entry .actions {
+        flex: 1 1 100%;
+        margin-bottom: 5px;
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>BiomX Shop - Управление никнеймами Free Fire</h1>
+      <p>Администраторский инструмент для обновления никнеймов игроков</p>
+    </header>
+    
+    <div class="tabs">
+      <div class="tab active" data-tab="update">Обновить никнейм</div>
+      <div class="tab" data-tab="check">Проверить никнейм</div>
+      <div class="tab" data-tab="predefined">Известные никнеймы</div>
+    </div>
+    
+    <div id="alertContainer"></div>
+    
+    <div class="tab-content active" id="update-tab">
+      <form id="updateForm">
+        <div class="form-group">
+          <label for="gameId">ID игрока Free Fire:</label>
+          <input type="text" id="gameId" name="gameId" required placeholder="Например: 48031006">
+        </div>
+        
+        <div class="form-group">
+          <label for="nickname">Реальный никнейм:</label>
+          <input type="text" id="nickname" name="nickname" required placeholder="Введите точный никнейм из игры">
+          <div class="hint">Важно: вводите никнейм точно так, как он отображается в игре, включая все специальные символы и форматирование.</div>
+        </div>
+        
+        <div class="form-group">
+          <button type="submit">Обновить никнейм</button>
+          <button type="button" class="button-secondary" id="checkButton">Проверить текущий</button>
+        </div>
+      </form>
+      
+      <div class="hint">
+        <strong>Примеры специальных никнеймов:</strong>
+        <div>
+          <span class="nickname-copy" onclick="copyToClipboard('☆ᴍɪsᴛᴇʀ ʙɪᴏᴍッ')">☆ᴍɪsᴛᴇʀ ʙɪᴏᴍッ</span>
+          <span class="nickname-copy" onclick="copyToClipboard('ᴮᴵᴼᴹᵡツ')">ᴮᴵᴼᴹᵡツ</span>
+          <span class="nickname-copy" onclick="copyToClipboard('࿇ᴮᴵᴼᴹ X࿇')">࿇ᴮᴵᴼᴹ X࿇</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="check-tab">
+      <form id="checkForm">
+        <div class="form-group">
+          <label for="checkGameId">ID игрока Free Fire:</label>
+          <input type="text" id="checkGameId" name="checkGameId" required placeholder="Например: 48031006">
+        </div>
+        
+        <div class="form-group">
+          <button type="submit">Проверить никнейм</button>
+        </div>
+      </form>
+      
+      <div class="results hidden" id="checkResults">
+        <h3>Текущий никнейм:</h3>
+        <div class="nickname-entry">
+          <div class="id" id="resultGameId"></div>
+          <div class="name" id="resultNickname"></div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="predefined-tab">
+      <h3>Список известных никнеймов:</h3>
+      <div class="known-nicknames" id="knownNicknamesList">
+        <!-- Здесь будут отображаться известные никнеймы -->
+        <div class="loading">Загрузка никнеймов...</div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Функция для копирования в буфер обмена
+    function copyToClipboard(text) {
+      const input = document.createElement('input');
+      input.value = text;
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand('copy');
+      document.body.removeChild(input);
+      
+      showAlert(`Никнейм "${text}" скопирован в буфер обмена`);
+    }
+    
+    // Функция для отображения уведомлений
+    function showAlert(message, type = 'success') {
+      const alertContainer = document.getElementById('alertContainer');
+      const alertDiv = document.createElement('div');
+      alertDiv.className = `alert alert-${type}`;
+      alertDiv.textContent = message;
+      
+      alertContainer.appendChild(alertDiv);
+      
+      // Автоматически скрываем уведомление через 5 секунд
+      setTimeout(() => {
+        alertDiv.remove();
+      }, 5000);
+    }
+    
+    // Обработчик для переключения вкладок
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Снимаем активный класс со всех вкладок
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        
+        // Устанавливаем активный класс для выбранной вкладки
+        tab.classList.add('active');
+        const tabName = tab.getAttribute('data-tab');
+        document.getElementById(`${tabName}-tab`).classList.add('active');
+        
+        // Если выбрана вкладка "Известные никнеймы", загружаем список
+        if (tabName === 'predefined') {
+          loadKnownNicknames();
+        }
+      });
+    });
+    
+    // Функция для загрузки известных никнеймов
+    async function loadKnownNicknames() {
+      try {
+        const response = await fetch('/api/free-fire/known-nicknames');
+        
+        if (response.ok) {
+          const data = await response.json();
+          const container = document.getElementById('knownNicknamesList');
+          container.innerHTML = ''; // Очищаем контейнер
+          
+          if (data.nicknames && data.nicknames.length > 0) {
+            data.nicknames.forEach(item => {
+              const entry = document.createElement('div');
+              entry.className = 'nickname-entry';
+              
+              const idDiv = document.createElement('div');
+              idDiv.className = 'id';
+              idDiv.textContent = item.gameId;
+              
+              const nameDiv = document.createElement('div');
+              nameDiv.className = 'name';
+              nameDiv.textContent = item.nickname;
+              
+              entry.appendChild(idDiv);
+              entry.appendChild(nameDiv);
+              container.appendChild(entry);
+            });
+          } else {
+            container.innerHTML = '<div class="nickname-entry">Нет известных никнеймов</div>';
+          }
+        } else {
+          document.getElementById('knownNicknamesList').innerHTML = 
+            '<div class="nickname-entry">Ошибка загрузки никнеймов</div>';
+        }
+      } catch (error) {
+        document.getElementById('knownNicknamesList').innerHTML = 
+          `<div class="nickname-entry">Ошибка: ${error.message}</div>`;
+      }
+    }
+    
+    // Обработчик для формы обновления никнейма
+    document.getElementById('updateForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const gameId = document.getElementById('gameId').value.trim();
+      const nickname = document.getElementById('nickname').value.trim();
+      
+      if (!gameId || !nickname) {
+        showAlert('Пожалуйста, заполните все поля', 'error');
+        return;
+      }
+      
+      try {
+        const response = await fetch('/api/free-fire/update-nickname', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ gameId, nickname })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          showAlert(`Никнейм для ID ${gameId} успешно обновлен на "${nickname}"`);
+          document.getElementById('gameId').value = '';
+          document.getElementById('nickname').value = '';
+        } else {
+          showAlert(`Ошибка: ${data.error || 'Не удалось обновить никнейм'}`, 'error');
+        }
+      } catch (error) {
+        showAlert(`Ошибка: ${error.message}`, 'error');
+      }
+    });
+    
+    // Обработчик для кнопки проверки текущего никнейма
+    document.getElementById('checkButton').addEventListener('click', async () => {
+      const gameId = document.getElementById('gameId').value.trim();
+      
+      if (!gameId) {
+        showAlert('Пожалуйста, введите ID игрока', 'error');
+        return;
+      }
+      
+      await checkNickname(gameId);
+    });
+    
+    // Обработчик для формы проверки никнейма
+    document.getElementById('checkForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const gameId = document.getElementById('checkGameId').value.trim();
+      
+      if (!gameId) {
+        showAlert('Пожалуйста, введите ID игрока', 'error');
+        return;
+      }
+      
+      await checkNickname(gameId);
+    });
+    
+    // Функция для проверки никнейма
+    async function checkNickname(gameId) {
+      try {
+        const response = await fetch(`/api/user/nickname/${gameId}`);
+        const data = await response.json();
+        
+        if (response.ok) {
+          document.getElementById('resultGameId').textContent = data.gameId;
+          document.getElementById('resultNickname').textContent = data.nickname || 'Никнейм не найден';
+          document.getElementById('checkResults').classList.remove('hidden');
+          
+          // Автоматически переключаемся на вкладку проверки
+          document.querySelector('.tab[data-tab="check"]').click();
+          
+          // Заполняем поле ID игрока на вкладке проверки
+          document.getElementById('checkGameId').value = gameId;
+        } else {
+          showAlert(`Ошибка: ${data.error || 'Не удалось получить никнейм'}`, 'error');
+        }
+      } catch (error) {
+        showAlert(`Ошибка: ${error.message}`, 'error');
+      }
+    }
+  </script>
+</body>
+</html>

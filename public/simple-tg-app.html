@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  <meta name="referrer" content="no-referrer">
+  <title>BiomX_Shop</title>
+  <!-- Использование локальной копии и CDN для надежности -->
+  <script>
+    // Решение проблемы совместимости - сначала пробуем загрузить с CDN
+    (function() {
+      var script = document.createElement('script');
+      script.src = 'https://telegram.org/js/telegram-web-app.js';
+      script.onerror = function() {
+        // Если CDN недоступен, используем резервную копию
+        console.log('CDN недоступен, используем резервную копию Telegram WebApp JS');
+        var fallbackScript = document.createElement('script');
+        fallbackScript.src = '/telegram-web-app-emulator.js';
+        document.head.appendChild(fallbackScript);
+      };
+      document.head.appendChild(script);
+    })();
+  </script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', Arial, sans-serif;
+      background-color: var(--tg-theme-bg-color, #f5f5f5);
+      color: var(--tg-theme-text-color, #000000);
+    }
+    
+    .container {
+      max-width: 100%;
+      padding: 0;
+      margin: 0 auto;
+    }
+    
+    .header {
+      padding: 12px 16px;
+    }
+    
+    .shop-name {
+      color: #f71a2c;
+      font-size: 22px;
+      font-weight: bold;
+      margin: 0;
+    }
+    
+    .banner {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    
+    .banner img {
+      width: 100%;
+      border-radius: 8px;
+      display: block;
+    }
+    
+    .section-title {
+      color: #333;
+      font-size: 22px;
+      font-weight: bold;
+      margin: 20px 0 15px 16px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .section-title .icon {
+      margin-right: 8px;
+      color: #f71a2c;
+    }
+    
+    .login-section {
+      padding: 15px;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      margin: 0 15px 20px;
+    }
+    
+    .login-title {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+    
+    .login-description {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 15px;
+    }
+    
+    .input-field {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+    
+    .login-button {
+      width: 100%;
+      background-color: #f71a2c;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    
+    .packages-section {
+      margin: 0 15px 20px;
+    }
+    
+    .package-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    
+    .package-item {
+      background-color: white;
+      border-radius: 8px;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+    
+    .package-info {
+      flex: 1;
+    }
+    
+    .package-name {
+      font-weight: bold;
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+    
+    .package-price {
+      color: #666;
+      font-size: 14px;
+    }
+    
+    .package-button {
+      background-color: #f71a2c;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 12px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    
+    .payment-methods, .promo-section, .reviews-section {
+      margin: 0 15px 20px;
+    }
+    
+    .method-item, .promo-form {
+      background-color: white;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+    
+    .footer {
+      background-color: #333;
+      color: white;
+      padding: 20px 15px;
+      text-align: center;
+      margin-top: 20px;
+    }
+    
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin: 15px 0;
+    }
+    
+    .social-icon {
+      width: 36px;
+      height: 36px;
+      background-color: #555;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .copyright {
+      font-size: 12px;
+      color: #aaa;
+      margin-top: 15px;
+    }
+    
+    .manager-section {
+      background-color: #444;
+      border-radius: 8px;
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      margin-top: 20px;
+    }
+    
+    .manager-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      margin-right: 15px;
+    }
+    
+    .manager-info {
+      flex: 1;
+    }
+    
+    .manager-name {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    
+    .manager-title {
+      font-size: 12px;
+      color: #ccc;
+    }
+    
+    .message-button {
+      background-color: #25D366;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      margin-left: 10px;
+    }
+    
+    .status-message {
+      color: #f71a2c;
+      font-size: 14px;
+      text-align: center;
+      margin-top: 10px;
+      display: none;
+    }
+    
+    .nickname-display {
+      font-size: 14px;
+      color: #666;
+      margin-top: 5px;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1 class="shop-name">BiomX_Shop</h1>
+    </header>
+    
+    <div class="banner">
+      <img src="../assets/banner.png" alt="АЛМАЗЫ ПО СКИДКЕ">
+    </div>
+    
+    <div id="login-view">
+      <div class="section-title">
+        <span class="icon">👤</span>
+        Войти в магазин
+      </div>
+      
+      <div class="login-section">
+        <div class="login-title">Войти в магазин</div>
+        <div class="login-description">Введите ID вашего аккаунта Free Fire для продолжения</div>
+        
+        <div class="form">
+          <div class="form-group">
+            <label for="game-id">ID игрока</label>
+            <input type="text" id="game-id" class="input-field" placeholder="Введите ID Free Fire" pattern="[0-9]{5,12}">
+            <div id="nickname-display" class="nickname-display"></div>
+          </div>
+          
+          <button id="login-button" class="login-button">Войти</button>
+          <div id="status-message" class="status-message"></div>
+        </div>
+      </div>
+    </div>
+    
+    <div id="packages-view" class="hidden">
+      <div class="section-title">
+        <span class="icon">💎</span>
+        Каталог алмазов
+      </div>
+      
+      <div class="packages-section">
+        <div id="packages-list" class="package-list">
+          <!-- Пакеты будут добавлены динамически -->
+        </div>
+      </div>
+      
+      <div class="section-title">
+        <span class="icon">💳</span>
+        Способы оплаты
+      </div>
+      
+      <div class="payment-methods">
+        <div class="method-item">
+          <div class="method-name">Visa/Mastercard</div>
+        </div>
+        <div class="method-item">
+          <div class="method-name">Qiwi</div>
+        </div>
+        <div class="method-item">
+          <div class="method-name">ЮMoney</div>
+        </div>
+      </div>
+      
+      <div class="section-title">
+        <span class="icon">🏷️</span>
+        Промокод
+      </div>
+      
+      <div class="promo-section">
+        <div class="promo-form">
+          <input type="text" class="input-field" placeholder="Введите промокод">
+          <button class="login-button">Применить</button>
+        </div>
+      </div>
+      
+      <div class="section-title">
+        <span class="icon">💬</span>
+        Отзывы
+      </div>
+      
+      <div class="reviews-section">
+        <div id="reviews-list">
+          <!-- Отзывы будут добавлены динамически -->
+          <div style="text-align: center; padding: 20px; color: #666;">
+            Пока нет отзывов
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <footer class="footer">
+      <div>
+        <h3 class="shop-name">BiomX_Shop</h3>
+        <p>Официальный магазин алмазов Free Fire</p>
+      </div>
+      
+      <div class="social-links">
+        <a href="https://wa.me/+79659661395" target="_blank" class="social-icon">
+          <span>WA</span>
+        </a>
+        <a href="https://t.me/BiomX_Garant" target="_blank" class="social-icon">
+          <span>TG</span>
+        </a>
+        <a href="https://instagram.com/Biom_X" target="_blank" class="social-icon">
+          <span>IG</span>
+        </a>
+        <a href="https://vk.com/biomxxx" target="_blank" class="social-icon">
+          <span>VK</span>
+        </a>
+      </div>
+      
+      <div class="manager-section">
+        <img src="../assets/images/manager-avatar.jpeg" alt="Тимерлан" class="manager-avatar">
+        <div class="manager-info">
+          <div class="manager-name">Тимерлан</div>
+          <div class="manager-title">Менеджер-помощник</div>
+        </div>
+        <a href="https://wa.me/+79899282649" target="_blank" class="message-button">
+          <span>WhatsApp</span>
+        </a>
+      </div>
+      
+      <div class="copyright">
+        &copy; 2024 BiomX_Shop. Все права защищены.
+      </div>
+    </footer>
+  </div>
+  
+  <script>
+    // Инициализация Telegram WebApp
+    const tg = window.Telegram?.WebApp;
+    
+    // Пакеты алмазов
+    const diamondPackages = [
+      { id: 1, name: "100 + 5 алмазов", price: 90 },
+      { id: 2, name: "310 + 16 алмазов", price: 260 },
+      { id: 3, name: "520 + 26 алмазов", price: 429 },
+      { id: 4, name: "1060 + 53 алмазов", price: 849 },
+      { id: 5, name: "2180 + 218 алмазов", price: 1700 },
+      { id: 6, name: "5600 + 560 алмазов", price: 4390 }
+    ];
+    
+    // Получаем элементы DOM
+    const loginView = document.getElementById('login-view');
+    const packagesView = document.getElementById('packages-view');
+    const gameIdInput = document.getElementById('game-id');
+    const nicknameDisplay = document.getElementById('nickname-display');
+    const loginButton = document.getElementById('login-button');
+    const statusMessage = document.getElementById('status-message');
+    const packagesList = document.getElementById('packages-list');
+    
+    // Адаптация к Telegram WebApp
+    if (tg) {
+      console.log("Telegram WebApp инициализирован");
+      
+      // Подстраиваем цвета под тему Telegram
+      document.documentElement.style.setProperty('--button-color', tg.themeParams.button_color || '#f71a2c');
+      document.documentElement.style.setProperty('--button-text-color', tg.themeParams.button_text_color || '#ffffff');
+      
+      // Сообщаем Telegram, что страница готова
+      tg.ready();
+      
+      // Настраиваем главную кнопку
+      tg.MainButton.setText('Выбрать пакет алмазов');
+      tg.MainButton.setParams({
+        color: '#f71a2c',
+        text_color: '#ffffff'
+      });
+    }
+    
+    // Инициализация
+    function init() {
+      // Проверяем, сохранен ли уже ID игры
+      const savedGameId = localStorage.getItem('gameId');
+      
+      // Если есть ID и он валидный, сразу показываем пакеты
+      if (savedGameId && isValidGameId(savedGameId)) {
+        gameIdInput.value = savedGameId;
+        checkNickname(savedGameId);
+        showPackages();
+      }
+      
+      // Загружаем пакеты алмазов
+      loadPackages();
+      
+      // Добавляем обработчики событий
+      loginButton.addEventListener('click', handleLogin);
+      gameIdInput.addEventListener('input', handleGameIdInput);
+    }
+    
+    // Проверка валидности ID игры
+    function isValidGameId(id) {
+      return /^\d{5,12}$/.test(id);
+    }
+    
+    // Обработка ввода ID игры
+    function handleGameIdInput() {
+      const gameId = gameIdInput.value.trim();
+      
+      if (gameId.length >= 5) {
+        checkNickname(gameId);
+      } else {
+        nicknameDisplay.textContent = '';
+      }
+    }
+    
+    // Проверка никнейма
+    function checkNickname(gameId) {
+      fetch(`/api/user/nickname/${gameId}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data && data.nickname) {
+            nicknameDisplay.textContent = data.nickname;
+          } else {
+            nicknameDisplay.textContent = '';
+          }
+        })
+        .catch(error => {
+          console.error('Ошибка при получении никнейма:', error);
+          nicknameDisplay.textContent = '';
+        });
+    }
+    
+    // Обработка входа
+    function handleLogin() {
+      const gameId = gameIdInput.value.trim();
+      
+      if (!isValidGameId(gameId)) {
+        statusMessage.textContent = 'Введите корректный ID игры (от 5 до 12 цифр)';
+        statusMessage.style.display = 'block';
+        return;
+      }
+      
+      // Сохраняем ID в локальное хранилище
+      localStorage.setItem('gameId', gameId);
+      
+      // Показываем пакеты
+      showPackages();
+    }
+    
+    // Показать список пакетов
+    function showPackages() {
+      // Переключаем экраны
+      loginView.classList.add('hidden');
+      packagesView.classList.remove('hidden');
+      
+      // Если есть Telegram WebApp, настраиваем основную кнопку
+      if (tg) {
+        tg.MainButton.show();
+      }
+    }
+    
+    // Загрузка пакетов алмазов
+    function loadPackages() {
+      packagesList.innerHTML = ''; // Очищаем список
+      
+      // Добавляем каждый пакет в список
+      diamondPackages.forEach(pkg => {
+        const packageEl = document.createElement('div');
+        packageEl.className = 'package-item';
+        packageEl.innerHTML = `
+          <div class="package-info">
+            <div class="package-name">${pkg.name}</div>
+            <div class="package-price">${pkg.price} ₽</div>
+          </div>
+          <button class="package-button" onclick="selectPackage(${pkg.id})">Выбрать</button>
+        `;
+        packagesList.appendChild(packageEl);
+      });
+    }
+    
+    // Выбор пакета алмазов
+    function selectPackage(packageId) {
+      const gameId = localStorage.getItem('gameId');
+      const packageInfo = diamondPackages.find(p => p.id === packageId);
+      
+      if (!packageInfo) return;
+      
+      console.log(`Выбран пакет: ${packageInfo.name} для ID: ${gameId}`);
+      
+      // Если есть Telegram WebApp, закрываем с данными
+      if (tg) {
+        tg.sendData(JSON.stringify({
+          action: 'select_package',
+          gameId: gameId,
+          packageId: packageId,
+          packageName: packageInfo.name,
+          packagePrice: packageInfo.price
+        }));
+        
+        // Закрываем WebApp
+        tg.close();
+      } else {
+        // Если это обычный браузер, перенаправляем на основной сайт
+        window.location.href = `/?action=select_package&game_id=${gameId}&package_id=${packageId}`;
+      }
+    }
+    
+    // Обработка URL-параметров
+    function processUrlParams() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const gameId = urlParams.get('game_id');
+      
+      if (gameId && isValidGameId(gameId)) {
+        gameIdInput.value = gameId;
+        localStorage.setItem('gameId', gameId);
+        checkNickname(gameId);
+        showPackages();
+      }
+    }
+    
+    // Запускаем инициализацию и обработку URL-параметров
+    document.addEventListener('DOMContentLoaded', () => {
+      processUrlParams();
+      init();
+    });
+    
+    // Определяем функцию selectPackage в глобальной области видимости
+    window.selectPackage = selectPackage;
+  </script>
+</body>
+</html>

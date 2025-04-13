@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  <meta name="referrer" content="no-referrer">
+  <title>BiomX Shop</title>
+  <!-- Использование локальной копии и CDN для надежности -->
+  <script>
+    // Решение проблемы совместимости - сначала пробуем загрузить с CDN
+    (function() {
+      var script = document.createElement('script');
+      script.src = 'https://telegram.org/js/telegram-web-app.js';
+      script.onerror = function() {
+        // Если CDN недоступен, используем резервную копию
+        console.log('CDN недоступен, используем резервную копию Telegram WebApp JS');
+        var fallbackScript = document.createElement('script');
+        fallbackScript.src = '/telegram-web-app-emulator.js';
+        document.head.appendChild(fallbackScript);
+      };
+      document.head.appendChild(script);
+    })();
+  </script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: var(--tg-theme-bg-color, #ffffff);
+      color: var(--tg-theme-text-color, #000000);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+    .container {
+      padding: 20px;
+      width: 100%;
+      max-width: 600px;
+      box-sizing: border-box;
+    }
+    .logo {
+      width: 100px;
+      height: 100px;
+      margin-bottom: 20px;
+      background-color: #f71a2c;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: var(--tg-theme-text-color, #000000);
+    }
+    p {
+      font-size: 16px;
+      margin-bottom: 30px;
+      color: var(--tg-theme-hint-color, #999999);
+    }
+    .btn {
+      background-color: var(--tg-theme-button-color, #f71a2c);
+      color: var(--tg-theme-button-text-color, #ffffff);
+      border: none;
+      border-radius: 8px;
+      padding: 15px 25px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-bottom: 15px;
+      width: 100%;
+    }
+    .game-id {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .input {
+      width: 100%;
+      padding: 15px;
+      border: 1px solid var(--tg-theme-hint-color, #cccccc);
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 16px;
+      background-color: var(--tg-theme-secondary-bg-color, #f5f5f5);
+      color: var(--tg-theme-text-color, #000000);
+      box-sizing: border-box;
+    }
+    .diamond-packages {
+      width: 100%;
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .package {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      background-color: var(--tg-theme-secondary-bg-color, #f5f5f5);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    .package:hover {
+      transform: translateY(-2px);
+    }
+    .package-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .package-name {
+      font-weight: bold;
+      font-size: 16px;
+    }
+    .package-price {
+      color: var(--tg-theme-hint-color, #999999);
+      font-size: 14px;
+    }
+    .package-select {
+      background-color: var(--tg-theme-button-color, #f71a2c);
+      color: var(--tg-theme-button-text-color, #ffffff);
+      border: none;
+      border-radius: 4px;
+      padding: 8px 12px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="main-view">
+    <h1 style="text-align: left; color: #f71a2c; margin-top: 0;">BiomX_Shop</h1>
+    <div style="margin-bottom: 20px;">
+      <img src="../assets/IMG_5663.jpeg" alt="АЛМАЗЫ ПО СКИДКЕ" style="width: 100%; border-radius: 8px;">
+    </div>
+    
+    <h2 style="text-align: left; margin-bottom: 15px; display: flex; align-items: center;">
+      <span style="margin-right: 8px;">👤</span> Войти в магазин
+    </h2>
+    
+    <div style="background-color: #f8f8f8; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+      <h3 style="margin-top: 0;">Войти в магазин</h3>
+      <p style="color: #666; margin-bottom: 15px;">Введите ID вашего аккаунта Free Fire для продолжения</p>
+      
+      <div>
+        <label for="game-id-input" style="display: block; text-align: left; margin-bottom: 5px;">ID игрока</label>
+        <input type="text" id="game-id-input" class="input" placeholder="Введите ID Free Fire" pattern="[0-9]{5,12}" inputmode="numeric">
+      </div>
+      
+      <button onclick="saveGameId()" class="btn" style="background-color: #f71a2c; margin-top: 10px;">Войти</button>
+      <p id="status-message" style="display:none; color: #f71a2c; margin-top: 10px;"></p>
+    </div>
+  </div>
+  
+  <div class="container" id="packages-view" style="display:none;">
+    <h1 style="text-align: left; color: #f71a2c; margin-top: 0;">BiomX_Shop</h1>
+    <div style="margin-bottom: 20px;">
+      <img src="../assets/IMG_5663.jpeg" alt="АЛМАЗЫ ПО СКИДКЕ" style="width: 100%; border-radius: 8px;">
+    </div>
+
+    <h2 style="text-align: left; margin-bottom: 15px; display: flex; align-items: center;">
+      <span style="margin-right: 8px;">💎</span> Каталог алмазов
+    </h2>
+    
+    <div style="margin-bottom: 10px; font-size: 14px; color: #666;">
+      ID игры: <span id="game-id-display" style="font-weight: bold;"></span>
+      <span id="nickname-display" style="margin-left: 10px; color: #888;"></span>
+    </div>
+    
+    <div class="diamond-packages" id="packages-list" style="margin-bottom: 20px;">
+      <!-- Пакеты будут добавлены динамически -->
+    </div>
+    
+    <h2 style="text-align: left; margin-bottom: 15px; display: flex; align-items: center;">
+      <span style="margin-right: 8px;">💳</span> Способы оплаты
+    </h2>
+    
+    <div style="margin-bottom: 20px;">
+      <div style="background-color: white; border-radius: 8px; padding: 15px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        <div>Visa/Mastercard</div>
+      </div>
+      <div style="background-color: white; border-radius: 8px; padding: 15px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        <div>Qiwi</div>
+      </div>
+      <div style="background-color: white; border-radius: 8px; padding: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        <div>ЮMoney</div>
+      </div>
+    </div>
+    
+    <h2 style="text-align: left; margin-bottom: 15px; display: flex; align-items: center;">
+      <span style="margin-right: 8px;">🏷️</span> Промокод
+    </h2>
+    
+    <div style="margin-bottom: 20px;">
+      <div style="background-color: white; border-radius: 8px; padding: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        <input type="text" class="input" placeholder="Введите промокод" style="margin-bottom: 10px;">
+        <button class="btn" style="background-color: #f71a2c;">Применить</button>
+      </div>
+    </div>
+    
+    <button onclick="backToMain()" class="btn" style="margin-top: 20px; background-color: transparent; border: 1px solid #f71a2c; color: #f71a2c;">Изменить ID</button>
+  </div>
+  
+  <script>
+    // Инициализация Telegram WebApp
+    const tg = window.Telegram?.WebApp;
+    
+    // Пакеты алмазов
+    const diamondPackages = [
+      { id: 1, name: "100 + 5 алмазов", price: 90 },
+      { id: 2, name: "310 + 16 алмазов", price: 260 },
+      { id: 3, name: "520 + 26 алмазов", price: 429 },
+      { id: 4, name: "1060 + 53 алмазов", price: 849 },
+      { id: 5, name: "2180 + 218 алмазов", price: 1700 },
+      { id: 6, name: "5600 + 560 алмазов", price: 4390 }
+    ];
+    
+    // Получаем элементы DOM
+    const mainView = document.getElementById('main-view');
+    const packagesView = document.getElementById('packages-view');
+    const gameIdInput = document.getElementById('game-id-input');
+    const gameIdDisplay = document.getElementById('game-id-display');
+    const statusMessage = document.getElementById('status-message');
+    const packagesList = document.getElementById('packages-list');
+    
+    // Адаптация к Telegram WebApp
+    if (tg) {
+      console.log("Telegram WebApp инициализирован");
+      
+      // Подстраиваем цвета под тему Telegram
+      document.documentElement.style.setProperty('--button-color', tg.themeParams.button_color || '#f71a2c');
+      document.documentElement.style.setProperty('--button-text-color', tg.themeParams.button_text_color || '#ffffff');
+      
+      // Сообщаем Telegram, что страница готова
+      tg.ready();
+      
+      // Настраиваем главную кнопку
+      tg.MainButton.setText('Выбрать пакет алмазов');
+      tg.MainButton.setParams({
+        color: '#f71a2c',
+        text_color: '#ffffff'
+      });
+    }
+    
+    // Инициализация
+    function init() {
+      // Проверяем, сохранен ли уже ID игры
+      const savedGameId = localStorage.getItem('gameId');
+      
+      // Если есть ID и он валидный, сразу показываем пакеты
+      if (savedGameId && isValidGameId(savedGameId)) {
+        gameIdInput.value = savedGameId;
+        showPackages(savedGameId);
+      }
+      
+      // Загружаем пакеты алмазов
+      loadPackages();
+    }
+    
+    // Проверка валидности ID игры
+    function isValidGameId(id) {
+      return /^\d{5,12}$/.test(id);
+    }
+    
+    // Сохранение ID игры
+    function saveGameId() {
+      const gameId = gameIdInput.value.trim();
+      
+      if (!isValidGameId(gameId)) {
+        statusMessage.textContent = 'Введите корректный ID игры (от 5 до 12 цифр)';
+        statusMessage.style.display = 'block';
+        return;
+      }
+      
+      // Сохраняем ID в локальное хранилище
+      localStorage.setItem('gameId', gameId);
+      
+      // Показываем пакеты
+      showPackages(gameId);
+    }
+    
+    // Показать список пакетов
+    function showPackages(gameId) {
+      // Обновляем отображаемый ID
+      gameIdDisplay.textContent = gameId;
+      
+      // Получаем никнейм
+      fetchNickname(gameId);
+      
+      // Переключаем экраны
+      mainView.style.display = 'none';
+      packagesView.style.display = 'block';
+      
+      // Если есть Telegram WebApp, настраиваем основную кнопку
+      if (tg) {
+        tg.MainButton.show();
+      }
+    }
+    
+    // Получение никнейма
+    function fetchNickname(gameId) {
+      const nicknameDisplay = document.getElementById('nickname-display');
+      
+      fetch(`/api/user/nickname/${gameId}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data && data.nickname) {
+            nicknameDisplay.textContent = data.nickname;
+          } else {
+            nicknameDisplay.textContent = '';
+          }
+        })
+        .catch(error => {
+          console.error('Ошибка при получении никнейма:', error);
+          nicknameDisplay.textContent = '';
+        });
+    }
+    
+    // Вернуться к вводу ID
+    function backToMain() {
+      mainView.style.display = 'block';
+      packagesView.style.display = 'none';
+      
+      // Скрываем основную кнопку в Telegram
+      if (tg) {
+        tg.MainButton.hide();
+      }
+    }
+    
+    // Загрузка пакетов алмазов
+    function loadPackages() {
+      packagesList.innerHTML = ''; // Очищаем список
+      
+      // Добавляем каждый пакет в список
+      diamondPackages.forEach(pkg => {
+        const packageEl = document.createElement('div');
+        packageEl.style.backgroundColor = 'white';
+        packageEl.style.borderRadius = '8px';
+        packageEl.style.padding = '15px';
+        packageEl.style.marginBottom = '10px';
+        packageEl.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
+        packageEl.style.display = 'flex';
+        packageEl.style.justifyContent = 'space-between';
+        packageEl.style.alignItems = 'center';
+        
+        packageEl.innerHTML = `
+          <div style="flex: 1;">
+            <div style="font-weight: bold; font-size: 16px; margin-bottom: 5px;">${pkg.name}</div>
+            <div style="color: #666; font-size: 14px;">${pkg.price} ₽</div>
+          </div>
+          <button 
+            style="background-color: #f71a2c; color: white; border: none; border-radius: 4px; padding: 8px 12px; font-size: 14px; cursor: pointer;" 
+            onclick="selectPackage(${pkg.id})"
+          >
+            Выбрать
+          </button>
+        `;
+        packagesList.appendChild(packageEl);
+      });
+    }
+    
+    // Выбор пакета алмазов
+    function selectPackage(packageId) {
+      const gameId = gameIdDisplay.textContent;
+      const packageInfo = diamondPackages.find(p => p.id === packageId);
+      
+      if (!packageInfo) return;
+      
+      console.log(`Выбран пакет: ${packageInfo.name} для ID: ${gameId}`);
+      
+      // Если есть Telegram WebApp, закрываем с данными
+      if (tg) {
+        tg.sendData(JSON.stringify({
+          action: 'select_package',
+          gameId: gameId,
+          packageId: packageId,
+          packageName: packageInfo.name,
+          packagePrice: packageInfo.price
+        }));
+        
+        // Закрываем WebApp
+        tg.close();
+      } else {
+        // Если это обычный браузер, перенаправляем на основной сайт
+        window.location.href = `/?action=select_package&game_id=${gameId}&package_id=${packageId}`;
+      }
+    }
+    
+    // Обработка URL-параметров
+    function processUrlParams() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const gameId = urlParams.get('game_id');
+      
+      if (gameId && isValidGameId(gameId)) {
+        gameIdInput.value = gameId;
+        localStorage.setItem('gameId', gameId);
+        showPackages(gameId);
+      }
+    }
+    
+    // Запускаем инициализацию и обработку URL-параметров
+    document.addEventListener('DOMContentLoaded', () => {
+      processUrlParams();
+      init();
+    });
+  </script>
+</body>
+</html>
